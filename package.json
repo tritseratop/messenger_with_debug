@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "description": "server",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^4.1.0",
+    "readline-sync": "^1.4.10"
+  },
+  "scripts": {
+    "start:c": "node client.js",
+    "start:s": "node server.js",
+    "build:": "node-gyp build --debug"
+  }
+}
