@@ -47,21 +47,29 @@ Napi::Value Client::Connect(const Napi::CallbackInfo& info) {
 Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 	Napi::Env env = info.Env();
 	if (info.Length() < 2) {
-		std::cout << "Expected two arguments" << std::endl;
+		std::cout << "Expected 4 arguments" << std::endl;
 		//return  Napi::Boolean::New(info.Env(), false);
 	}
 	else if (!info[0].IsFunction()) {
-		std::cout << "Expected first arg to be function" << std::endl;
+		std::cout << "Expected first arg to be function (ok)" << std::endl;
 		//return  Napi::Boolean::New(info.Env(), false);
 	}
 	else if (!info[1].IsFunction()) {
+		std::cout << "Expected second arg to be function (error)" << std::endl;
+		//return  Napi::Boolean::New(info.Env(), false);
+	}
+	else if (!info[2].IsFunction()) {
+		std::cout << "Expected second arg to be function (progress)" << std::endl;
+		//return  Napi::Boolean::New(info.Env(), false);
+	}
+	else if (!info[3].IsFunction()) {
 		std::cout << "Expected second arg to be function" << std::endl;
 		//return  Napi::Boolean::New(info.Env(), false);
 	}
 	std::thread native_thread;
 	Napi::ThreadSafeFunction tsfn = Napi::ThreadSafeFunction::New(
 		env,							// Environment
-		info[0].As<Napi::Function>(),	// JS function from caller
+		info[3].As<Napi::Function>(),	// JS function from caller
 		"TSFN",							// Resource name
 		0,								// Max queue size (0 = unlimited).
 		1,								// Initial thread count
@@ -70,49 +78,35 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 		}
 	);
 	std::cout << "Function connected" << std::endl;
+	
+	Napi::Function okCb = info[0].As<Napi::Function>();
+	Napi::Function errorCb = info[1].As<Napi::Function>();
+	Napi::Function progressCb = info[2].As<Napi::Function>();
+	std::string hello = "hello";
+	worker = new EchoWorker(okCb, errorCb, progressCb, hello);
+	worker->Queue();
 	native_thread = std::thread(
 		[this, &tsfn]() {
 			auto callback = [](Napi::Env env, Napi::Function jsCallback, std::string* message) {
 				// Transform native data into JS data, passing it to the provided
 				// `jsCallback` -- the TSFN's JavaScript function.
-				jsCallback.Call({ Napi::String::New(env, *message) });
-				delete message;
+				*message = jsCallback.Call({ Napi::String::New(env, *message) }).As<Napi::String>();
 			};
+			std::string send_msg;
 			while (true) {
-				std::string* message = new std::string();
-				if (main_socket.Recv(*message) == Result::Error) {
+				napi_status status = tsfn.BlockingCall(&send_msg, callback);
+				if (main_socket.Send(send_msg) == Result::Error) {
 					int error = WSAGetLastError();
 					return;
 				}
-				// TODO send to js
-				
-				std::cout << *message << std::endl;
-
-				
-				// dont work
-				napi_status status = tsfn.NonBlockingCall(message, callback);
-				if (status != napi_ok) {
-					//Napi::Error::Fatal(
-					//	"ThreadEntry",
-					//	"Napi::ThreadSafeNapi::Function.BlockingCall() failed");
-					std::cout << "Napi::ThreadSafeNapi::Function.BlockingCall() failed" << std::endl;
-				}
-				std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+				//std::this_thread::sleep_for(std::chrono::seconds(3));
 			}
 			tsfn.Release();
 		}
 	);
 	native_thread.detach();
-	Napi::Function input = info[1].As<Napi::Function>();
-	std::string send_msg;
-	while (true) {
-		send_msg = input.Call(info.Env().Global(), {}).As<Napi::String>();
-		//std::getline(std::cin, send_msg);
-		if (main_socket.Send(send_msg) == Result::Error) {
-			int error = WSAGetLastError();
-			return Napi::Boolean::New(info.Env(), false);
-		}
-	}
+	
+	return Napi::Boolean::New(info.Env(), false);
 }
 
 Napi::Value Client::CreateNewItem(const Napi::CallbackInfo& info) {

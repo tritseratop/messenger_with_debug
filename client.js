@@ -16,6 +16,7 @@ const output = (msg) => {
 
 let input = function () {
     let res = "";
+    console.log("in");
     res = readline.prompt({ prompt: ''});
     return res;
 };
@@ -24,8 +25,22 @@ client.Initialize();
 client.Create();
 client.Connect();
 
+const onErrorCallback = (msg) => {
+    // Use the data accordingly
+    // ...
+};
+
+const onOkCallback = (echo) => {
+    // Use the data accordingly
+    // ...
+};
+
+const onProgressCallback = (msg) => {
+    console.log(msg);
+};
+
 //void async function () {
-client.StartChating(output, input);
+client.StartChating(onOkCallback, onErrorCallback, onProgressCallback, input);
 //}();
 
 /*while (true) {
