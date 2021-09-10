@@ -35,8 +35,20 @@ Napi::Value Server::Close(const Napi::CallbackInfo& info) {
     return Napi::Boolean::New(env, main_socket.Close());
 }
 
-void Server::AddClient(Socket& client) { // разобраться с копированием в функции
-    client_it[client.GetSocketHandle()] = client_sockets.insert(client_sockets.end(), client);
+Result Server::AddClient(Socket& client) { // разобраться с копированием в функции
+    if (client_sockets.size() < MAX_CLIENT_COUNT) {
+        client_it[client.GetSocketHandle()] = client_sockets.insert(client_sockets.end(), client);
+        FD_SET(client.GetSocketHandle(), &master);
+        std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r"; // TODO receive from js
+        client.Send(welcomeMsg);
+        return Result::Success;
+    }
+    else {
+        waiting_clients.push(client);
+        std::string msg = "The maximum number of messenger clients was reached. Please wait...";
+        client.Send(msg);
+        return Result::Success;
+    }
 }
 
 Result Server::StartListen(Endpoint endpoint) {
@@ -48,7 +60,7 @@ Napi::Value Server::StartListen(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Server::HandleClients(const Napi::CallbackInfo& info) {
-    fd_set master;
+    //fd_set master;
     FD_ZERO(&master);
     FD_SET(main_socket.GetSocketHandle(), &master);
 
@@ -65,18 +77,11 @@ Napi::Value Server::HandleClients(const Napi::CallbackInfo& info) {
                     int error = WSAGetLastError();
                     return Napi::Boolean::New(info.Env(), false);
                 }
-                client_it[client.GetSocketHandle()] = client_sockets.insert(client_sockets.end(), client); // TODO use AddClient
-
-                FD_SET(client.GetSocketHandle(), &master);
-
-                std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r"; // TODO receive from js
-
-                client.Send(welcomeMsg);
+                AddClient(client);
             }
             else {
                 std::string message;
                 if (sock.Recv(message) != Result::Success) {
-                    FD_CLR(sock.GetSocketHandle(), &master);
                     DeleteSocket(sock);
                 }
                 else {
@@ -101,10 +106,15 @@ Result Server::SendToAll(std::string msg, Socket from) {
 }
 
 void Server::DeleteSocket(Socket& s) {
+    FD_CLR(s.GetSocketHandle(), &master);
     int handle = s.GetSocketHandle();
     s.Close();
     client_sockets.erase(client_it.at(handle)); //в каком порядке?
     client_it.erase(handle);
+    if (!waiting_clients.empty()) {
+        AddClient(waiting_clients.front());
+        waiting_clients.pop();
+    }
 }
 
 Server::Server(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Server>(info) {}

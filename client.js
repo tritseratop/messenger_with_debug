@@ -1,19 +1,22 @@
 'use strict';
 
 let readline = require('readline-sync');
+readline.se
 const { Client } = require('bindings')('client');
 
 const client = new Client();
 
+/*const output = (...args) => {
+    console.log(...args);
+};*/
+
 const output = (msg) => {
-    console.log("js callback");
     console.log(msg);
-    
 };
 
 let input = function () {
     let res = "";
-    res = readline.prompt();
+    res = readline.prompt({ prompt: ''});
     return res;
 };
 
@@ -22,7 +25,7 @@ client.Create();
 client.Connect();
 
 //void async function () {
-client.StartChating(input, output);
+client.StartChating(output, input);
 //}();
 
 /*while (true) {

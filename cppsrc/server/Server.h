@@ -23,8 +23,9 @@ public:
 	Napi::Value StartListen(const Napi::CallbackInfo& info);
 	Napi::Value HandleClients(const Napi::CallbackInfo& info);
 	//friend void ClientHandler(Server& server);
-	void AddClient(Socket& client);
+	Result AddClient(Socket& client);
 private:
+	fd_set master;
 	Socket main_socket;
 	std::list<Socket> client_sockets;
 	std::map<int, std::list<Socket>::iterator> client_it;

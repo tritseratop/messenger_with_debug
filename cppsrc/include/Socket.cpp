@@ -121,11 +121,11 @@ Result Socket::Send(std::string& message) {
 }
 
 Result Socket::Recv(std::string& message) {
-	int bytesRecieved = 0;
+	int bytesReceived = 0;
 	int size;
 	// Принимаем размер
-	Recv(&size, sizeof(int), bytesRecieved);
-	if (bytesRecieved == SOCKET_ERROR) {
+	Recv(&size, sizeof(int), bytesReceived);
+	if (bytesReceived == SOCKET_ERROR) {
 		int error = WSAGetLastError();
 		return Result::Error;
 	}
@@ -134,8 +134,8 @@ Result Socket::Recv(std::string& message) {
 	//message[size] = '\0';
 
 	// Принимаем сообщение
-	Recv(&message[0], size, bytesRecieved);
-	if (bytesRecieved == SOCKET_ERROR) {
+	Recv(&message[0], size, bytesReceived);
+	if (bytesReceived == SOCKET_ERROR) {
 		int error = WSAGetLastError();
 		return Result::Error;
 	}
