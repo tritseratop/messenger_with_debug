@@ -1,7 +1,6 @@
 'use strict';
 
 let readline = require('readline-sync');
-readline.se
 const { Client } = require('bindings')('client');
 
 const client = new Client();
@@ -25,7 +24,9 @@ client.Create();
 client.Connect();
 
 //void async function () {
-client.StartChating(output, input);
+if (client.StartChating(output, input) == false) {
+    console.log("The end");
+}
 //}();
 
 /*while (true) {

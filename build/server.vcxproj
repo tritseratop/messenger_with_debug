@@ -155,6 +155,15 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\cppsrc\include\Constants.h" />
+    <ClInclude Include="..\cppsrc\include\Endpoint.h" />
+    <ClInclude Include="..\cppsrc\include\IncludeMe.h" />
+    <ClInclude Include="..\cppsrc\include\Network.h" />
+    <ClInclude Include="..\cppsrc\include\Result.h" />
+    <ClInclude Include="..\cppsrc\include\Socket.h" />
+    <ClInclude Include="..\cppsrc\server\Server.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   <ImportGroup Label="ExtensionTargets" />

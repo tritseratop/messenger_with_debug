@@ -41,6 +41,11 @@ Result Server::AddClient(Socket& client) { // разобраться с копированием в функц
         FD_SET(client.GetSocketHandle(), &master);
         std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r"; // TODO receive from js
         client.Send(welcomeMsg);
+        if (!message_history.empty()) {
+            for (auto& m : message_history) {
+                client.Send(m);
+            }
+        }
         return Result::Success;
     }
     else {
@@ -97,6 +102,10 @@ Result Server::SendToAll(std::string msg, Socket from) {
     for (auto& s : client_sockets) {
         if (from.GetSocketHandle() != s.GetSocketHandle()) {
             std::string msg_to_send = "Client #" + std::to_string(from.GetSocketHandle()) + " " + msg;
+            if (message_history.size() == MAX_MESSAGE_BUF_COUNT) {
+                message_history.pop_front();
+            }
+            message_history.push_back(msg_to_send);
             if (s.Send(msg_to_send) != Result::Success) { // TODO use move
                 DeleteSocket(s);
             }

@@ -88,4 +88,31 @@
       <Filter>..</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\client.js" />
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\cppsrc\include\Constants.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\include\Endpoint.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\include\IncludeMe.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\include\Network.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\include\Result.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\include\Socket.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\client\Client.h">
+      <Filter>..\cppsrc\client</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

@@ -30,6 +30,7 @@ private:
 	std::list<Socket> client_sockets;
 	std::map<int, std::list<Socket>::iterator> client_it;
 	std::queue<Socket> waiting_clients;
+	std::deque<std::string> message_history;
 	//Socket server_socket;
 	size_t client_count = 0;
 	Result SendToAll(std::string msg, Socket from);

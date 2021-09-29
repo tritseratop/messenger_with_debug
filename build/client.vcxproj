@@ -133,6 +133,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\binding.gyp" />
+    <None Include="..\client.js" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\cppsrc\client\client.cpp">
@@ -154,6 +156,15 @@
       <Project>{396309F4-04C2-931D-D904-90E6BD1142B2}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\cppsrc\client\Client.h" />
+    <ClInclude Include="..\cppsrc\include\Constants.h" />
+    <ClInclude Include="..\cppsrc\include\Endpoint.h" />
+    <ClInclude Include="..\cppsrc\include\IncludeMe.h" />
+    <ClInclude Include="..\cppsrc\include\Network.h" />
+    <ClInclude Include="..\cppsrc\include\Result.h" />
+    <ClInclude Include="..\cppsrc\include\Socket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />

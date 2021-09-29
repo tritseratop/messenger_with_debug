@@ -88,16 +88,15 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 				
 				std::cout << *message << std::endl;
 
-				
 				// dont work
-				napi_status status = tsfn.NonBlockingCall(message, callback);
-				if (status != napi_ok) {
-					//Napi::Error::Fatal(
-					//	"ThreadEntry",
-					//	"Napi::ThreadSafeNapi::Function.BlockingCall() failed");
-					std::cout << "Napi::ThreadSafeNapi::Function.BlockingCall() failed" << std::endl;
-				}
-				std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+				//napi_status status = tsfn.NonBlockingCall(message, callback);
+				//if (status != napi_ok) {
+				//	//Napi::Error::Fatal(
+				//	//	"ThreadEntry",
+				//	//	"Napi::ThreadSafeNapi::Function.BlockingCall() failed");
+				//	std::cout << "Napi::ThreadSafeNapi::Function.BlockingCall() failed" << std::endl;
+				//}
+				//std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
 			}
 			tsfn.Release();
 		}
