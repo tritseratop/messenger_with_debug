@@ -101,7 +101,7 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 			tsfn.Release();
 		}
 	);
-	native_thread.detach();
+	//native_thread.detach();
 	Napi::Function input = info[1].As<Napi::Function>();
 	std::string send_msg;
 	while (true) {

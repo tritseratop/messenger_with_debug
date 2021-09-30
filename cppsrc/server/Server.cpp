@@ -35,13 +35,13 @@ Napi::Value Server::Close(const Napi::CallbackInfo& info) {
     return Napi::Boolean::New(env, main_socket.Close());
 }
 
-Result Server::AddClient(Socket& client) { // разобраться с копированием в функции
+Result Server::AddClient(Socket& client) { // TODO разобраться с копированием в функции
     if (client_sockets.size() < MAX_CLIENT_COUNT) {
         client_it[client.GetSocketHandle()] = client_sockets.insert(client_sockets.end(), client);
         FD_SET(client.GetSocketHandle(), &master);
         std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r"; // TODO receive from js
         client.Send(welcomeMsg);
-        if (!message_history.empty()) {
+        if (!message_history.empty()) { // TODO отсылать один раз
             for (auto& m : message_history) {
                 client.Send(m);
             }
