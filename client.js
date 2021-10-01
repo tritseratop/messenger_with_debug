@@ -10,6 +10,7 @@ const client = new Client();
 };*/
 
 const output = (msg) => {
+    console.log("Js callback output");
     console.log(msg);
 };
 
