@@ -142,6 +142,6 @@ Result Socket::Recv(std::string& message) {
 	return Result::Success;
 }
 
-SOCKET Socket::GetSocketHandle() {
+SOCKET Socket::GetSocketHandle() const {
 	return handle;
 }

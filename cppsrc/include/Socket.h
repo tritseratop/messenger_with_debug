@@ -19,7 +19,7 @@ public:
 	Result Recv(void* data, int numberOfBytes, int& bytesSent);
 	Result Send(std::string& message);
 	Result Recv(std::string& message);
-	SOCKET GetSocketHandle();
+	SOCKET GetSocketHandle() const;
 private:
 	SOCKET handle = INVALID_SOCKET;
 };
