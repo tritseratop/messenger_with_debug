@@ -46,15 +46,20 @@ Napi::Value Client::Connect(const Napi::CallbackInfo& info) {
 std::thread promise_thread;
 using Context = Napi::Reference<Napi::Value>;
 using DataType = std::promise<std::string>;
-void CallJs(Napi::Env env, Napi::Function jsCallback, Context* context, DataType* message) {
+void CallJs(Napi::Env env, Napi::Function jsCallback, Context* context, DataType* promise) {
 	// Transform native data into JS data, passing it to the provided
 	// `jsCallback` -- the TSFN's JavaScript function.
-	jsCallback.Call(context->Value(), { Napi::String::New(env, "help") });
-	delete message;
+	auto p = jsCallback.Call({}).As<Napi::Object>();
+	auto thenFunc = p.Get("then").As<Napi::Function>();
+	thenFunc.Call(p, { Napi::Function::New(env, [=](const Napi::CallbackInfo& info) {
+			std::string result = info[0].As<Napi::String>().Utf8Value();
+			std::cout << result << std::endl;
+			promise->set_value(result);
+			}) });
 };
 using TSFN = Napi::TypedThreadSafeFunction<Context, DataType, CallJs>;
 TSFN promise_tsfn;
-std::promise<std::string> promise;
+//std::promise<std::string> promise;
 
 std::thread native_thread;
 Napi::ThreadSafeFunction tsfn;
@@ -105,7 +110,7 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 				std::cout << *message << std::endl;
 
 				// dont work
-				napi_status status = tsfn.NonBlockingCall(message, callback);
+				napi_status status = tsfn.BlockingCall(message, callback);
 				if (status != napi_ok) {
 					//Napi::Error::Fatal(
 					//	"ThreadEntry",
@@ -118,56 +123,40 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 		}
 	);
 	//native_thread.join();
-	//native_thread.detach();
+	native_thread.detach();
 
 	Napi::Function input = info[1].As<Napi::Function>();
 
-	//Context* context = new Napi::Reference<Napi::Value>(Persistent(info.This()));
+	Context* context = new Napi::Reference<Napi::Value>(Persistent(info.This()));
 
-	//promise_tsfn = TSFN::New(
-	//	env,							// Environment
-	//	info[0].As<Napi::Function>(),	// JS function from caller
-	//	"TSFN",							// Resource name
-	//	0,								// Max queue size (0 = unlimited).
-	//	1,								// Initial thread count
-	//	context,
-	//	[](Napi::Env, void*, Context* ctx) {        // Finalizer used to clean threads up
-	//		native_thread.join();
-	//		delete ctx;
-	//	}
-	//);
-	//promise_thread = std::thread(
-	//	[this]() {
-	//		while (true) {
-	//			std::promise<std::string> promise;
-	//			auto future = promise.get_future();
-	//			promise_tsfn.NonBlockingCall(&promise);
-	//			auto result = future.get();
-	//		}
-	//		tsfn.Release();
-	//	}
-	//);
-	//std::string send_msg;
-
-	//while (true) {
-		auto p = input.Call({}).As<Napi::Object>();
-		auto thenFunc = p.Get("then").As<Napi::Function>();
-		
-		auto future = promise.get_future();
-		thenFunc.Call(p, { Napi::Function::New(env, [this](const Napi::CallbackInfo& info) {
-			std::string result = info[0].As<Napi::String>().Utf8Value();
-			std::cout << result << std::endl;
-			promise.set_value(result);
-			}) });
-		std::string result = future.get();
-		if (main_socket.Send(result) == Result::Error) {
-			int error = WSAGetLastError();
-			return Napi::Boolean::New(info.Env(), false);
+	promise_tsfn = TSFN::New(
+		env,							// Environment
+		info[0].As<Napi::Function>(),	// JS function from caller
+		"TSFN",							// Resource name
+		0,								// Max queue size (0 = unlimited).
+		1,								// Initial thread count
+		context,
+		[](Napi::Env, void*, Context* ctx) {        // Finalizer used to clean threads up
+			promise_thread.join();
+			delete ctx;
 		}
-		//send_msg = input.Call(info.Env().Global(), {}).As<Napi::String>();
-		//std::getline(std::cin, send_msg);
-		
-	//}
+	);
+	promise_thread = std::thread(
+		[this]() {
+			while (true) {
+				std::promise<std::string> promise;
+				auto future = promise.get_future();
+				promise_tsfn.NonBlockingCall(&promise);
+				auto result = future.get();
+				if (main_socket.Send(result) == Result::Error) {
+					int error = WSAGetLastError();
+				}
+			}
+			promise_tsfn.Release();
+		}
+	);
+	//native_thread.join();
+	promise_thread.join();
 	return Napi::Boolean::New(info.Env(), false);
 }
 
