@@ -43,6 +43,9 @@ Napi::Value Client::Connect(const Napi::CallbackInfo& info) {
 	return Napi::Boolean::New(info.Env(), main_socket.Connect(Endpoint(IP, PORT)));
 }
 
+std::thread native_thread;
+Napi::ThreadSafeFunction tsfn;
+
 // ЖИЕСТЬ
 Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 	Napi::Env env = info.Env();
@@ -58,20 +61,22 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 		std::cout << "Expected second arg to be function" << std::endl;
 		//return  Napi::Boolean::New(info.Env(), false);
 	}
-	std::thread native_thread;
-	Napi::ThreadSafeFunction tsfn = Napi::ThreadSafeFunction::New(
+	Napi::Function output = info[0].As<Napi::Function>();
+	Napi::Function input = info[1].As<Napi::Function>();
+
+	tsfn = Napi::ThreadSafeFunction::New(
 		env,							// Environment
 		info[0].As<Napi::Function>(),	// JS function from caller
 		"TSFN",							// Resource name
 		0,								// Max queue size (0 = unlimited).
-		1,								// Initial thread count
-		[&native_thread](Napi::Env) {        // Finalizer used to clean threads up
+		2,								// Initial thread count
+		[](Napi::Env) {   // Finalizer used to clean threads up
 			native_thread.join();
 		}
 	);
-	std::cout << "Function connected" << std::endl;
+
 	native_thread = std::thread(
-		[this, &tsfn]() {
+		[this]() {
 			auto callback = [](Napi::Env env, Napi::Function jsCallback, std::string* message) {
 				// Transform native data into JS data, passing it to the provided
 				// `jsCallback` -- the TSFN's JavaScript function.
@@ -88,23 +93,23 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 				
 				std::cout << *message << std::endl;
 
-				// dont work
-				//napi_status status = tsfn.NonBlockingCall(message, callback);
-				//if (status != napi_ok) {
-				//	//Napi::Error::Fatal(
-				//	//	"ThreadEntry",
-				//	//	"Napi::ThreadSafeNapi::Function.BlockingCall() failed");
-				//	std::cout << "Napi::ThreadSafeNapi::Function.BlockingCall() failed" << std::endl;
-				//}
-				//std::this_thread::sleep_for(std::chrono::milliseconds(100)); 
+				// callback isn't invoked
+				napi_status status = tsfn.NonBlockingCall(message, callback);
+				if (status != napi_ok) {
+					//Napi::Error::Fatal(
+					//	"ThreadEntry",
+					//	"Napi::ThreadSafeNapi::Function.BlockingCall() failed");
+					std::cout << "Napi::ThreadSafeNapi::Function.BlockingCall() failed" << std::endl;
+				}
+				//std::this_thread::sleep_for(std::chrono::seconds(2)); 
 			}
 			tsfn.Release();
 		}
 	);
-	//native_thread.detach();
-	Napi::Function input = info[1].As<Napi::Function>();
+	//native_thread.join();
 	std::string send_msg;
 	while (true) {
+		send_msg = "hello";
 		send_msg = input.Call(info.Env().Global(), {}).As<Napi::String>();
 		//std::getline(std::cin, send_msg);
 		if (main_socket.Send(send_msg) == Result::Error) {
@@ -112,6 +117,7 @@ Napi::Value Client::StartChating(const Napi::CallbackInfo& info) {
 			return Napi::Boolean::New(info.Env(), false);
 		}
 	}
+	return Napi::Boolean::New(info.Env(), false);
 }
 
 Napi::Value Client::CreateNewItem(const Napi::CallbackInfo& info) {
