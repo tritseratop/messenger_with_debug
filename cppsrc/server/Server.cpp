@@ -35,6 +35,15 @@ Napi::Value Server::Close(const Napi::CallbackInfo& info) {
     return Napi::Boolean::New(env, main_socket.Close());
 }
 
+std::string createMessageFromQueue(const std::deque<std::string>& deq) {
+    std::string res;
+    for (const auto& d : deq) {
+        res += d + "\n";
+    }
+    res.pop_back();
+    return res;
+}
+
 Result Server::AddClient(Socket& client) { // TODO разобраться с копированием в функции
     if (client_sockets.size() < MAX_CLIENT_COUNT) {
         client_it[client.GetSocketHandle()] = client_sockets.insert(client_sockets.end(), client);
@@ -42,9 +51,10 @@ Result Server::AddClient(Socket& client) { // TODO разобраться с копированием в 
         std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r"; // TODO receive from js
         client.Send(welcomeMsg);
         if (!message_history.empty()) { // TODO отсылать один раз
-            for (auto& m : message_history) {
+            client.Send(createMessageFromQueue(message_history));
+            /*for (auto& m : message_history) {
                 client.Send(m);
-            }
+            }*/
         }
         return Result::Success;
     }
@@ -98,7 +108,7 @@ Napi::Value Server::HandleClients(const Napi::CallbackInfo& info) {
     return Napi::Boolean::New(info.Env(), true); // TODO придумать закрытие бесконечного цикла
 }
 
-Result Server::SendToAll(std::string msg, Socket from) {
+Result Server::SendToAll(std::string msg, const Socket& from) {
     for (auto& s : client_sockets) {
         if (from.GetSocketHandle() != s.GetSocketHandle()) {
             std::string msg_to_send = "Client #" + std::to_string(from.GetSocketHandle()) + " " + msg;

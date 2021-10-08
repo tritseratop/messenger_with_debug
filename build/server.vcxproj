@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\binding.gyp" />
+    <None Include="..\server.js" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\cppsrc\server\server.cpp">
@@ -163,6 +164,7 @@
     <ClInclude Include="..\cppsrc\include\Result.h" />
     <ClInclude Include="..\cppsrc\include\Socket.h" />
     <ClInclude Include="..\cppsrc\server\Server.h" />
+    <ClInclude Include="Parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />

@@ -1,5 +1,6 @@
 #pragma once
 #include "IncludeMe.h"
+#include "Parser.h"
 #include <iostream>
 #include <list>
 #include <map>
@@ -24,6 +25,7 @@ public:
 	Napi::Value HandleClients(const Napi::CallbackInfo& info);
 	//friend void ClientHandler(Server& server);
 	Result AddClient(Socket& client);
+	void SetConfig();
 private:
 	fd_set master;
 	Socket main_socket;
@@ -31,9 +33,10 @@ private:
 	std::map<int, std::list<Socket>::iterator> client_it;
 	std::queue<Socket> waiting_clients;
 	std::deque<std::string> message_history;
+	Configure config;
 	//Socket server_socket;
 	size_t client_count = 0;
-	Result SendToAll(std::string msg, Socket from);
+	Result SendToAll(std::string msg, const Socket& from);
 	void DeleteSocket(Socket& s);
 	//fd_set master;
 };

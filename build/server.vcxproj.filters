@@ -110,5 +110,11 @@
     <ClInclude Include="..\cppsrc\include\Socket.h">
       <Filter>..\cppsrc\include</Filter>
     </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\server.js" />
   </ItemGroup>
 </Project>
