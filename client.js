@@ -1,7 +1,6 @@
 'use strict';
 
 let readline = require('readline-sync');
-const areadline = require('readline');
 const { Client } = require('bindings')('client');
 
 const client = new Client();
@@ -20,25 +19,12 @@ let input = function () {
     return res;
 };
 
-async function inputCallback() {
-    const rl = areadline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    return new Promise((resolve) => {
-        rl.question("Enter the message:", (answer) => {
-            rl.close();
-            resolve(answer);
-        });
-    });
-}
-
 client.Initialize();
 client.Create();
 client.Connect();
 
 //void async function () {
-if (client.StartChating(output, inputCallback) == false) {
+if (client.StartChating(output, input) == false) {
     console.log("The end");
 }
 //}();
