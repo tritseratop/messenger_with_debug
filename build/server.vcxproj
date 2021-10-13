@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\binding.gyp" />
+    <None Include="..\server.js" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\cppsrc\server\server.cpp">

@@ -111,4 +111,7 @@
       <Filter>..\cppsrc\include</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\server.js" />
+  </ItemGroup>
 </Project>
