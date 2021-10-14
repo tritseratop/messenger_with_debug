@@ -1,6 +1,7 @@
 #include "Server.h"
 #include <iostream>
 #include <thread>
+#include "Utility.h"
 
 void ServerClientHandler(SOCKET client) {
 }
@@ -71,7 +72,7 @@ Result Server::StartListen(Endpoint endpoint) {
 }
 
 Napi::Value Server::StartListen(const Napi::CallbackInfo& info) {
-    return Napi::Boolean::New(info.Env(), main_socket.Listen(IP, PORT));
+    return Napi::Boolean::New(info.Env(), main_socket.Listen(config.getIp(), config.getPort()));
 }
 
 Napi::Value Server::HandleClients(const Napi::CallbackInfo& info) {
@@ -136,7 +137,18 @@ void Server::DeleteSocket(Socket& s) {
     }
 }
 
-Server::Server(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Server>(info) {}
+Server::Server(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Server>(info) {
+    SetConfig(info[0].As<Napi::String>());
+}
+
+
+
+void Server::SetConfig(const std::string& path) {
+    std::string json;
+    if (ReadTextFile(path, json) == Result::Success) {
+        config = ParseJsonToConfig(json);
+    }
+}
 
 Napi::Object Server::Init(Napi::Env env, Napi::Object exports) {
     Napi::Function func = DefineClass(env, "Server", {

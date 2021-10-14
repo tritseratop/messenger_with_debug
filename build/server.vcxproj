@@ -51,7 +51,7 @@
       <AdditionalIncludeDirectories>C:\node-master\include\node;C:\node-master\src;C:\node-master\deps\openssl\config;C:\node-master\deps\openssl\openssl\include;C:\node-master\deps\uv\include;C:\node-master\deps\zlib;C:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <DisableSpecificWarnings>4351;4355;4800;4251;4275;4244;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>false</ExceptionHandling>
       <MinimalRebuild>false</MinimalRebuild>
@@ -71,7 +71,7 @@
       <AdditionalOptions>/LTCG:INCREMENTAL %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\\node-master\\out\\$(Configuration)\\node.lib"</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\\node-master\\$(Configuration)\\node.lib"</AdditionalDependencies>
       <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -83,13 +83,13 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>D:\node-master\include\node;D:\node-master\src;D:\node-master\deps\openssl\config;D:\node-master\deps\openssl\openssl\include;D:\node-master\deps\uv\include;D:\node-master\deps\zlib;D:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\node-master\include\node;C:\node-master\src;C:\node-master\deps\openssl\config;C:\node-master\deps\openssl\openssl\include;C:\node-master\deps\uv\include;C:\node-master\deps\zlib;C:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=server;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;NAPI_DISABLE_CPP_EXCEPTIONS;BUILDING_NODE_EXTENSION;HOST_BINARY="node.exe";DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\node-master\include\node;D:\node-master\src;D:\node-master\deps\openssl\config;D:\node-master\deps\openssl\openssl\include;D:\node-master\deps\uv\include;D:\node-master\deps\zlib;D:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\node-master\include\node;C:\node-master\src;C:\node-master\deps\openssl\config;C:\node-master\deps\openssl\openssl\include;C:\node-master\deps\uv\include;C:\node-master\deps\zlib;C:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <DisableSpecificWarnings>4351;4355;4800;4251;4275;4244;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -115,7 +115,7 @@
       <AdditionalOptions>/LTCG:INCREMENTAL %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"D:\\node-master\\$(Configuration)\\node.lib"</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;"C:\\node-master\\$(Configuration)\\node.lib"</AdditionalDependencies>
       <AdditionalOptions>/LTCG:INCREMENTAL /ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <DelayLoadDLLs>node.exe;%(DelayLoadDLLs)</DelayLoadDLLs>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -127,13 +127,12 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>D:\node-master\include\node;D:\node-master\src;D:\node-master\deps\openssl\config;D:\node-master\deps\openssl\openssl\include;D:\node-master\deps\uv\include;D:\node-master\deps\zlib;D:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\node-master\include\node;C:\node-master\src;C:\node-master\deps\openssl\config;C:\node-master\deps\openssl\openssl\include;C:\node-master\deps\uv\include;C:\node-master\deps\zlib;C:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=server;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;V8_DEPRECATION_WARNINGS;V8_IMMINENT_DEPRECATION_WARNINGS;_GLIBCXX_USE_CXX11_ABI=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;OPENSSL_NO_PINSHARED;OPENSSL_THREADS;NAPI_DISABLE_CPP_EXCEPTIONS;BUILDING_NODE_EXTENSION;HOST_BINARY="node.exe";%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\binding.gyp" />
-    <None Include="..\server.js" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\cppsrc\server\server.cpp">
@@ -158,13 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cppsrc\include\Constants.h" />
-    <ClInclude Include="..\cppsrc\include\Endpoint.h" />
-    <ClInclude Include="..\cppsrc\include\IncludeMe.h" />
-    <ClInclude Include="..\cppsrc\include\Network.h" />
-    <ClInclude Include="..\cppsrc\include\Result.h" />
-    <ClInclude Include="..\cppsrc\include\Socket.h" />
-    <ClInclude Include="..\cppsrc\server\Server.h" />
-    <ClInclude Include="Parser.h" />
+    <ClInclude Include="..\cppsrc\include\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />

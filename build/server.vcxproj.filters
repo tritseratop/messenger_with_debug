@@ -89,32 +89,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\cppsrc\server\Server.h">
-      <Filter>..\cppsrc\server</Filter>
+    <ClInclude Include="..\cppsrc\include\Utility.h">
+      <Filter>..\cppsrc\include</Filter>
     </ClInclude>
     <ClInclude Include="..\cppsrc\include\Constants.h">
       <Filter>..\cppsrc\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\cppsrc\include\Endpoint.h">
-      <Filter>..\cppsrc\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cppsrc\include\IncludeMe.h">
-      <Filter>..\cppsrc\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cppsrc\include\Network.h">
-      <Filter>..\cppsrc\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cppsrc\include\Result.h">
-      <Filter>..\cppsrc\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\cppsrc\include\Socket.h">
-      <Filter>..\cppsrc\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser.h">
-      <Filter>..\cppsrc\include</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\server.js" />
   </ItemGroup>
 </Project>
