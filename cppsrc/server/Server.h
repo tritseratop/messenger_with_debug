@@ -1,5 +1,6 @@
 #pragma once
 #include "IncludeMe.h"
+#include "logger/Logger.h"
 #include <iostream>
 #include <list>
 #include <map>
@@ -26,6 +27,8 @@ public:
 	Result AddClient(Socket& client);
 	void SetConfig(const std::string& path);
 private:
+	std::ofstream file;
+	logger::FileLogger log;
 	fd_set master;
 	Socket main_socket;
 	std::list<Socket> client_sockets;

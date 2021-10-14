@@ -95,6 +95,12 @@
     <ClInclude Include="..\cppsrc\include\Constants.h">
       <Filter>..\cppsrc\include</Filter>
     </ClInclude>
+    <ClInclude Include="..\cppsrc\include\IncludeMe.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\cppsrc\include\logger\Logger.h">
+      <Filter>..\cppsrc\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\server.js" />

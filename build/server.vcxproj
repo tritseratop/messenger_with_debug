@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\node-master\include\node;C:\node-master\src;C:\node-master\deps\openssl\config;C:\node-master\deps\openssl\openssl\include;C:\node-master\deps\uv\include;C:\node-master\deps\zlib;C:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Develop\nodejs\vs2019\messenger_with_debug\cppsrc\include\logger;C:\node-master\include\node;C:\node-master\src;C:\node-master\deps\openssl\config;C:\node-master\deps\openssl\openssl\include;C:\node-master\deps\uv\include;C:\node-master\deps\zlib;C:\node-master\deps\v8\include;D:\Develop\nodejs\vs2019\messenger_with_debug\node_modules\node-addon-api;..\cppsrc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
@@ -158,6 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\cppsrc\include\Constants.h" />
+    <ClInclude Include="..\cppsrc\include\IncludeMe.h" />
+    <ClInclude Include="..\cppsrc\include\logger\Logger.h" />
     <ClInclude Include="..\cppsrc\include\Utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,7 +1,8 @@
 #include "Server.h"
 #include <iostream>
-#include <thread>
 #include "Utility.h"
+
+using LOG = logger::FileLogger::e_logType;
 
 void ServerClientHandler(SOCKET client) {
 }
@@ -10,14 +11,14 @@ Napi::Value Server::Initialize(const Napi::CallbackInfo& info) {
     WSADATA wsadata;
     int result = WSAStartup(MAKEWORD(2, 2), &wsadata);
     if (result != 0) {
-        std::cerr << "Failed to start up the winsock API." << std::endl;
+        log << LOG::LOG_ERROR << "Failed to start up the winsock API";
         return Napi::Boolean::New(info.Env(), false);
     }
     if (LOBYTE(wsadata.wVersion) != 2 || HIBYTE(wsadata.wHighVersion) != 2) {
-        std::cerr << "Could not find a usable version of the winsock API dll." << std::endl;
+        log << LOG::LOG_ERROR << "Could not find a usable version of the winsock API dll";
         return Napi::Boolean::New(info.Env(), false);
     }
-    std::cout << "Winsock API successfully initialized!" << std::endl;
+    log << LOG::LOG_INFO << "Winsock API successfully initialized";
     return Napi::Boolean::New(info.Env(), true);
 }
 
@@ -58,6 +59,7 @@ Result Server::AddClient(Socket& client) { // TODO разобраться с копированием в 
     }
     else {
         waiting_clients.push(client);
+        log << LOG::LOG_INFO << "Client #" + std::to_string(client.GetSocketHandle()) + " is added to waiting";
         std::string msg = "The maximum number of messenger clients was reached. Please wait...";
         client.Send(msg);
         return Result::Success;
@@ -80,17 +82,18 @@ Napi::Value Server::HandleClients(const Napi::CallbackInfo& info) {
     while (true) {
         fd_set copy = master;
         int socket_count = select(0, &copy, nullptr, nullptr, nullptr);
-        client_count = socket_count - 1;
         for (int i = 0; i < socket_count; ++i) {
             Socket sock(copy.fd_array[i]);
             if (sock.GetSocketHandle() == main_socket.GetSocketHandle()) {
                 Socket client;
                 Result res = main_socket.Accept(client);
                 if (res == Result::Error) {
+                    log << LOG::LOG_ERROR << "Failed to connect client #" + std::to_string(client.GetSocketHandle());
                     int error = WSAGetLastError();
                     return Napi::Boolean::New(info.Env(), false);
                 }
                 AddClient(client);
+                log << LOG::LOG_INFO << "Client #" + std::to_string(client.GetSocketHandle()) + " is connected";
             }
             else {
                 std::string message;
@@ -110,6 +113,7 @@ Result Server::SendToAll(std::string msg, const Socket& from) {
     for (auto& s : client_sockets) {
         if (from.GetSocketHandle() != s.GetSocketHandle()) {
             std::string msg_to_send = "Client #" + std::to_string(from.GetSocketHandle()) + " " + msg;
+            log << LOG::LOG_MESSAGE << msg_to_send;
             if (message_history.size() == MAX_MESSAGE_BUF_COUNT) {
                 message_history.pop_front();
             }
@@ -128,13 +132,18 @@ void Server::DeleteSocket(Socket& s) {
     s.Close();
     client_sockets.erase(client_it.at(handle)); //в каком порядке?
     client_it.erase(handle);
+    log << LOG::LOG_INFO << "Client #" + std::to_string(handle) + " is disconnected";
     if (!waiting_clients.empty()) {
         AddClient(waiting_clients.front());
+        log << LOG::LOG_INFO << "Client #" + std::to_string(waiting_clients.front().GetSocketHandle()) + " is added to chat";
         waiting_clients.pop();
     }
 }
 
-Server::Server(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Server>(info) {
+Server::Server(const Napi::CallbackInfo& info)
+    : Napi::ObjectWrap<Server>(info)
+    , log("Messenger Logger")
+{
     SetConfig(info[0].As<Napi::String>());
 }
 

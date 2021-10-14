@@ -11,6 +11,7 @@ Result ReadTextFile(const std::string& path, std::string& result) {
 		buf.reserve(50);
 		result.reserve(50);
 		while (std::getline(file, result)) {}
+		file.close();
 		return Result::Success;
 	}
 	else {
